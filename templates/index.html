@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Green Api</title>
+  <style>
+    .two-column-container {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        margin-left: 160px;
+        padding: 10px;
+    }
+
+    .two-column-container .column {
+        flex: 1;
+        padding: 10px;
+    }
+
+    textarea {
+        width: 480px;
+        height: 780px;
+        box-sizing: border-box;
+        resize: none
+    }
+
+    button {
+        width: 320px;
+        height: 60px;
+        box-sizing: border-box;
+        margin-bottom: 40px;
+        font-size: 16px;
+        border-radius: 8px;
+        border-color: var(--light-primary-color);
+        box-shadow: 0 0 4px #999;
+        outline: none;
+        background-position: center;
+        transition: background .8s;
+        color: #fff;
+        background-color: #009805;
+    }
+
+    input[type="text"] {
+        width: 320px;
+        height: 40px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    .column div {
+        margin-top: 38px;
+        margin-bottom: 30px;
+    }
+
+    .fixed-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 70%;
+        width: 100%;
+        background-color: #fff;
+        padding: 10px;
+    }
+  </style>
+</head>
+<body>
+    <div class="two-column-container">
+        <div class="column">
+            <div>
+                <input type="text" id="idInstance" placeholder="Instance ID">
+                <input type="text" id="apiTokenInstance" placeholder="API Token">
+            </div>
+            <div>
+                <button onclick="getSettings()">Get Settings</button>
+                <button onclick="getStateInstance()">Get State Instance</button>
+            </div>
+            <div>
+                <input type="text" id="phoneNumber1" placeholder="Phone Number">
+                <input type="text" id="messageText" placeholder="Message Text">
+                <button onclick="sendTextMessage()">Send Text Message</button>
+            </div>
+            <div>
+                <input type="text" id="phoneNumber2" placeholder="Phone Number">
+                <input type="text" id="messageMedia" placeholder="Media URL">
+                <button onclick="sendFileByURL()">Send File By URL</button>
+            </div>
+        </div>
+        <div class="column">
+            <p>Ответ:</p>
+            <textarea id="myTextarea" name="textareaContent" readonly></textarea>
+        </div>
+        <div class="column fixed-bottom">
+            <button onclick="setData()">Пример</button>
+        </div>
+        <div class="column">
+            <p>t.me/nowely_y</p>
+            <p>github</p>
+            <p>ссылка на сайт</p>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js">  </script>
+<script>
+    const formData = new FormData(event.target);
+    const textareaContent = formData.get('textareaContent');
+
+    function getSettings(){
+        var data = {
+        idInstance: $('#idInstance').val(),
+        apiTokenInstance: $('#apiTokenInstance').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('get_settings')}}",
+            data: data,
+            success: function(response) {
+                $("#myTextarea").text(response);
+            },
+        })
+    }
+
+    function getStateInstance(){
+        var data = {
+        idInstance: $('#idInstance').val(),
+        apiTokenInstance: $('#apiTokenInstance').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('get_state_instance')}}",
+            data: data,
+            success: function(response) {
+                $("#myTextarea").text(response);
+            },
+        })
+    }
+
+    function sendTextMessage(){
+        var data = {
+        idInstance: $('#idInstance').val(),
+        apiTokenInstance: $('#apiTokenInstance').val(),
+        phoneNumber1: $('#phoneNumber1').val(),
+        messageText: $('#messageText').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('send_message')}}",
+            data: data,
+            success: function(response) {
+                $("#myTextarea").text(response);
+            },
+        })
+    }
+
+    function sendFileByURL(){
+        var data = {
+        idInstance: $('#idInstance').val(),
+        apiTokenInstance: $('#apiTokenInstance').val(),
+        phoneNumber2: $('#phoneNumber2').val(),
+        messageMedia: $('#messageMedia').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('send_media')}}",
+            data: data,
+            success: function(response) {
+                $("#myTextarea").text(response);
+            },
+        })
+    }
+
+    function setData(){
+        document.getElementById("idInstance").value = "1103946951";
+        document.getElementById("apiTokenInstance").value = "3dd95c1bb4ed4524a3dec1c12e55c32f36345dcfefa04ee2af";
+        document.getElementById("phoneNumber1").value = "77051377352";
+        document.getElementById("messageText").value = "hello world!";
+        document.getElementById("phoneNumber2").value = "77051377352";
+        document.getElementById("messageMedia").value = "https://wallpaper.forfun.com/fetch/93/9332742bce8d763ea78c132b617a5351.jpeg";
+    }
+</script>
+</html>
