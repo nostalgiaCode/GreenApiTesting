@@ -1,4 +1,5 @@
 import requests
+import json
 
 def errorHandler(response):
     if response.status_code == 400:
@@ -39,7 +40,8 @@ def getStateInstance(apiUrl, idInstance, apiTokenInstance):
 
 def sendTextMessage(apiUrl, idInstance, apiTokenInstance, chatId, message):
     url = f"{apiUrl}/waInstance{idInstance}/sendMessage/{apiTokenInstance}"
-    payload = f'{{\"chatId\": "{chatId}@c.us",\"message\": "{message}"}}'
+    data = {'chatId': f"{chatId}@c.us", 'message': message}
+    payload = json.dumps(data).encode('utf-8')
     headers = {
     'Content-Type': 'application/json'
     }
